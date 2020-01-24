@@ -1,0 +1,2 @@
+THROTTLE = 100
+TURN = 2
