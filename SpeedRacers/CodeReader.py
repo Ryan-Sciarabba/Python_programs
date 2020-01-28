@@ -40,118 +40,102 @@ def main():
                         if bool([ele for ele in NUMBERS if(ele in lexeme)]):
                             number = lexeme
                         lexeme = ''
-
+                if (i == len(line) - 1):
+                    if lexeme in PORTS:
+                        port = lexeme
+                    if lexeme in OPERATIONS:
+                        operation = lexeme
+                    if bool([ele for ele in NUMBERS if(ele in lexeme)]):
+                        number = lexeme
+                    lexeme = ''
+                    
             oprSwitch()
             print('Speed: %d' % speed)
             print('Angle: %d' % angle)
 
 def addPort():
     global port
-    def speed():
-        global speed
-        global number
+    global speed
+    global angle
+    global number
+    
+    print("Speed: ", int(speed), " Number: ", number)
+    
+    if port == "THROTTLE":
         speed = speed + number
-    def angle():
-        global angle
-        global number
+        
+    if port == "TURN":
         angle = angle + number
-                
-    addSwitcher = {
-        "THROTTLE": speed(),
-        "TURN": angle()
-        }
-
-    addSwitcher.get(port, "invalid port")
 
 def subPort():
-    print("In subPort")
     global port
     global speed
-    print(speed)
-    def speed():
-        global speed
-        global number
-        print(speed)
+    global angle
+    global number
+    
+    if port == "THROTTLE":
         speed = speed - number
-    def angle():
-        global angle
-        global number
+        
+    if port == "TURN":
         angle = angle - number
-                
-    subSwitcher = {
-        "THROTTLE": speed(),
-        "TURN": angle()
-        }
-
-    subSwitcher.get(port, "invalid port")
     
 def mltPort():
     global port
-    def speed():
-        global speed
-        global number
+    global speed
+    global angle
+    global number
+    
+    if port == "THROTTLE":
         speed = speed * number
-    def angle():
-        global angle
-        global number
+        
+    if port == "TURN":
         angle = angle * number
-                
-    mltSwitcher = {
-        "THROTTLE": speed(),
-        "TURN": angle()
-        }
-
-    mltSwitcher.get(port, "invalid port")
 
 def divPort():
     global port
-    def speed():
-        global speed
-        global number
-        speed = speed / number
-    def angle():
-        global angle
-        global number
-        angle = angle / number
-                
-    divSwitcher = {
-        "THROTTLE": speed(),
-        "TURN": angle()
-        }
+    global speed
+    global angle
+    global number
 
-    divSwitcher.get(port, "invalid port")
+    if port == "THROTTLE":
+        speed = speed / number
+        
+    if port == "TURN":
+        angle = angle / number
 
 def setPort():
     global port
-    def speed():
-        global speed
-        global number
-        speed = number
-    def angle():
-        global angle
-        global number
-        angle = number
-                
-    setSwitcher = {
-        "THROTTLE": speed(),
-        "TURN": angle()
-        }
+    global speed
+    global angle
+    global number
 
-    setSwitcher.get(port, "invalid port")
+    if port == "THROTTLE":
+        speed = number
+        
+    if port == "TURN":
+        angle = number
     
 def oprSwitch():
+
+    global number
+    global angle
+    global speed
     
+    number = int(number)
+    angle = int(angle)
+    speed = int(speed)
+
+    print("Op speed: ", speed)
     oprSwitcher = {
         1: mltPort(),
         2: addPort(),
         4: subPort(),
         6: divPort(),
-        20: setPort(),
+        20: setPort()
         }
 
     global operation
     nOperation = ord(operation) - 41
-    print(nOperation)
     oprSwitcher.get(nOperation, "invalid operation")
     
 main()
