@@ -9,6 +9,8 @@ def main():
     global port
     global operation
     global number
+    global speed
+    global angle
     
     #Open racer file
     racer = open("Racer.txt", "r")
@@ -59,20 +61,18 @@ def addPort():
     global angle
     global number
     
-    print("Speed: ", int(speed), " Number: ", number)
-    
     if port == "THROTTLE":
-        speed = speed + number
+        speed = speed + int(number)
         
     if port == "TURN":
-        angle = angle + number
-
+        angle = angle + int(number)
+    
 def subPort():
     global port
     global speed
     global angle
     global number
-    
+
     if port == "THROTTLE":
         speed = speed - number
         
@@ -90,7 +90,8 @@ def mltPort():
         
     if port == "TURN":
         angle = angle * number
-
+    
+    
 def divPort():
     global port
     global speed
@@ -117,25 +118,25 @@ def setPort():
     
 def oprSwitch():
 
+    global port
     global number
-    global angle
     global speed
-    
+    global angle
+
     number = int(number)
     angle = int(angle)
     speed = int(speed)
-
-    print("Op speed: ", speed)
+    
     oprSwitcher = {
-        1: mltPort(),
-        2: addPort(),
-        4: subPort(),
-        6: divPort(),
-        20: setPort()
+        1: mltPort,
+        2: addPort,
+        4: subPort,
+        6: divPort,
+        20: setPort
         }
 
     global operation
     nOperation = ord(operation) - 41
-    oprSwitcher.get(nOperation, "invalid operation")
-    
+    f = oprSwitcher.get(nOperation, "invalid operation")
+    f()
 main()
