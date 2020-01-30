@@ -4,6 +4,13 @@ class CodeParser():
     PORT = ''
     OPERATION = ''
     NUMBER = ''
+    JUMP = ''
+    FUNC = ''
+    FUNCTIONS = []
+
+    path = ''
+    speed = 0
+    angle = 0
 
     #Parsing libraries (or "keywords" if you wanna not sound like an arrogant prick)
     OPERATIONS = ['+', '-', '*', '/', '=']
@@ -14,6 +21,7 @@ class CodeParser():
 
     #Initialize the CodeParser
     def __init__(self, path):
+        self.path = "Racer.txt"
         self.SPEED = 0
         self.ANGLE = 0
 
@@ -24,62 +32,33 @@ class CodeParser():
         if self.racer.mode == "r":
             self.code = self.racer.readlines()
 
+        self.analyzer()
+
 
     #Analyze
     def analyzer(self):
 
-        #Break down lines into individual parts
-        lexeme = ''
-        
-            #For each line in the .txt file reset all stored variables then...
-            for line in self.code:
-                self.PORT = ''
-                self.OPERATION = ''
-                self.NUMBER = ''
-                lexeme = ''
-
-                #For each character in the line...
-                for i, char in enumerate(line):
-
-                    #If the character does not equal whitespace add it to the word
-                    if char != WHITESPACE:
-                       lexeme += char
-
-                    #If the character index is less than the length of the line and...
-                    if (i + 1 < len(line)):
-
-                        #If the character after i is whitespace or a newline check if the word is in "keywords"
-                        if line[i + 1] == WHITESPACE or line[i + 1] == '\n':
-                            if lexeme in PORTS:
-                                self.PORT = lexeme
-                            if lexeme in OPERATIONS:
-                                self.OPERATION = lexeme
-                            if bool([ele for ele in NUMBERS if(ele in lexeme)]):
-                                self.NUMBER = lexeme
-
-                            #Reset the word stored
-                            lexeme = ''
-                            
-                    #If the index of the character is one less than the length of the line check if the word is in "keywords"
-                    if (i == len(line) - 1):
-                        if lexeme in PORTS:
-                            self.PORT = lexeme
-                        if lexeme in OPERATIONS:
-                            self.OPERATION = lexeme
-                        if bool([ele for ele in NUMBERS if(ele in lexeme)]):
-                            self.NUMBER = lexeme
-
-                        #Reset the word stored
-                        lexeme = ''
+        for self.lineNum, self.line in enumerate(self.code):
+            self.terms = self.line.split()
+            if len(self.terms) == 3:   
+                self.PORT = self.terms[0]
+                self.OPERATION = self.terms[1]
+                self.NUMBER = self.terms[2]
 
                 #Parse the line of code   
                 self.oprSwitch()
 
+            if len(self.terms) == 2:
+                self.JUMP = self.terms[0]
+                self.FUNC = self.terms[1]
+                print("Jumping")
+                self.jump()
+
+            if len(self.terms) == 1:
+                self.FUNCTIONS.append(self.terms[0])
+            print(self.speed)
                 
-                print('Speed: %d' % self.SPEED)
-                print('Angle: %d' % self.ANGLE)
-                
-            self.racer.close()
+        self.racer.close()
 
 
     #Function to add number to port
@@ -154,6 +133,14 @@ class CodeParser():
         f = oprSwitcher.get(self.nOperation, "invalid operation")
         f()
 
+    #Function to jump to spcific line
+    def jump(self):
+        
+        for num, i in enumerate(self.code):
+            if self.FUNC == i:
+                self.line = num
+        self.lineNum = 0
+
 #This is just for testing and running the code
-#green = CodeParser()
-#CodeParser.__init__
+green = CodeParser("racer.txt")
+CodeParser.__init__
