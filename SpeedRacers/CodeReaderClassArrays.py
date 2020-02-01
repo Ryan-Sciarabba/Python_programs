@@ -16,7 +16,7 @@ class CodeParser():
 
     lineNum = 0
 
-    #Parsing libraries (or "keywords" if you wanna not sound like an arrogant prick)
+    #Parsing libraries (or "keywords")
     OPERATIONS = ['+', '-', '*', '/', '=']
     NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     WHITESPACE = ' '
