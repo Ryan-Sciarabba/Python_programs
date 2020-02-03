@@ -3,10 +3,11 @@ THROTTLE = 3
 1
 TURN + 2
 
+
 2
 THROTTLE + 2
 
-jmp 1 THROTTLE = 2
-jmp 2 THROTTLE = 5
+jmp 1 THROTTLE == 2
+jmp 2 THROTTLE == 5
 
 TURN = 5

@@ -8,15 +8,13 @@ class CodeParser():
     FUNC = ''
     T1 = ''
     T2 = ''
-    #FUNCTIONS = []
 
-    path = ''
     SPEED = 0
     ANGLE = 0
 
     lineNum = 0
 
-    #Parsing libraries (or "keywords")
+    #Parsing libraries (or "keywords" if you wanna not sound like an arrogant prick)
     OPERATIONS = ['+', '-', '*', '/', '=']
     NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     WHITESPACE = ' '
@@ -25,17 +23,16 @@ class CodeParser():
 
     #Initialize the CodeParser
     def __init__(self, path):
-        self.path = "Racer.txt"
+        path = "Racer.txt"
         self.SPEED = 0
         self.ANGLE = 0
 
         #Open racer file
-        self.racer = open(self.path, "r")
+        racer = open(path, "r")
 
         #Read lines in
-        if self.racer.mode == "r":
-            self.code = self.racer.readlines()
-            self.racer.close()
+        self.code = racer.readlines()
+        racer.close()
 
         #Remove whitespace from file
         line = 0
@@ -43,10 +40,10 @@ class CodeParser():
             terms = self.code[line].split()
             if len(terms) == 0:
                 self.code.pop(line)
-            line += 1
-                    
-        self.analyzer()
+            else:
+                line += 1
 
+        #self.analyzer()
 
     #Analyze
     def analyzer(self):
@@ -87,9 +84,7 @@ class CodeParser():
 
             #If there is 1 term recognize that it is a function
             if len(terms) == 1:
-                
                 print("Function")
-                #self.FUNCTIONS.append(terms[0])
 
             #Print speed and angle after each line read
             print("Speed:", self.SPEED)
@@ -234,7 +229,7 @@ class CodeParser():
                         return
 
         #If T1 is equal to T2, jump
-        if self.OPERATION == "=":
+        if self.OPERATION == "==":
             if self.T1 == self.T2:
                 for num, i in enumerate(self.code):
                     terms = self.code[num].split()
@@ -253,5 +248,5 @@ class CodeParser():
         
 
 #This is just for testing and running the code
-green = CodeParser("racer.txt")
-CodeParser.__init__
+#green = CodeParser("racer.txt")
+#CodeParser.__init__
