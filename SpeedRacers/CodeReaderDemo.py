@@ -47,37 +47,37 @@ class CodeParser():
             if terms[0] == "add":
                 self.addPort(terms)
 
-            if terms[0] == "sub":
+            elif terms[0] == "sub":
                 self.subPort(terms)
 
-            if terms[0] == "mpy":
+            elif terms[0] == "mpy":
                 self.mpyPort(terms)
 
-            if terms[0] == "div":
+            elif terms[0] == "div":
                 self.divPort(terms)
 
-            if terms[0] == "set":
+            elif terms[0] == "set":
                 self.setPort(terms)
 
-            if terms[0] == "jmp":
+            elif terms[0] == "jmp":
                 self.jump(terms)
 
-            if terms[0] == "lst":
+            elif terms[0] == "lst":
                 self.lstJump(terms)
 
-            if terms[0] == "lte":
+            elif terms[0] == "lte":
                 self.lteJump(terms)
 
-            if terms[0] == "grt":
+            elif terms[0] == "grt":
                 self.grtJump(terms)
 
-            if terms[0] == "gte":
+            elif terms[0] == "gte":
                 self.gteJump(terms)
 
-            if terms[0] == "eqt":
+            elif terms[0] == "eqt":
                 self.eqtJump(terms)
 
-            if terms[0] == "nte":
+            elif terms[0] == "nte":
                 self.nteJump(terms)
 
             #Print speed and angle after each line read
