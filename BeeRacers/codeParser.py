@@ -1,16 +1,17 @@
-class CodeParser():
+import bee
 
-    lineNum = 0
+class CodeParser():
 
     def __init__(self, path):
 
+        #Set line number to zero and initialize stack
+        self.lineNum = 0
+        self.functionLine = []
+        
         #Open bee code file
         beeCode = open(path, "r")
         self.userCode = beeCode.readlines()
         beeCode.close()
-
-        #Remove whitespace
-        self.userCode = [self.userCode.replace(' ', '') for self.userCode in self.userCode]
 
     def parser(self):
 
@@ -57,7 +58,15 @@ class CodeParser():
             elif terms[0] == "nte":
                 self.nte(terms)
 
+            elif terms[0] == "err":
+                self.error(terms)
 
+            elif terms[0] == "nop":
+                self.wait(terms)
+                
+            elif terms[0] == "end":
+                self.popFunction()
+                
             self.lineNum += 1
 
     def add(self, terms):
@@ -101,6 +110,7 @@ class CodeParser():
         for lineNum, line in enumerate(self.userCode):
             line = self.userCode[lineNum].split()
             if line[0] == terms[1]:
+                self.pushFunction()
                 self.lineNum = lineNum
                 return
             
@@ -122,6 +132,7 @@ class CodeParser():
             for lineNum, line in enumerate(self.userCode):
                 line in self.userCode[lineNum].split()
                 if line[0] == terms[4]:
+                    self.pushFunction()
                     self.lineNum = lineNum
                     return
 
@@ -131,24 +142,30 @@ class CodeParser():
             for lineNum, line in enumerate(self.userCode):
                 line in self.userCode[lineNum].split()
                 if line[0] == terms[4]:
+                    self.pushFunction()
                     self.lineNum = lineNum
                     return
+                
     def grt(self, terms):
         self.portToNum(terms)
         if int(terms[1]) > int(terms[2]):
             for lineNum, line in enumerate(self.userCode):
                 line in self.userCode[lineNum].split()
                 if line[0] == terms[4]:
+                    self.pushFunction()
                     self.lineNum = lineNum
                     return
+                
     def gte(self, terms):
         self.portToNum(terms)
         if int(terms[1]) >= int(terms[2]):
             for lineNum, line in enumerate(self.userCode):
                 line in self.userCode[lineNum].split()
                 if line[0] == terms[4]:
+                    self.pushFunction()
                     self.lineNum = lineNum
                     return
+                
     def eqt(self, terms):
         self.portToNum(terms)
         if int(terms[1]) == int(terms[2]):
@@ -164,6 +181,7 @@ class CodeParser():
             for lineNum, line in enumerate(self.userCode):
                 line in self.userCode[lineNum].split()
                 if line[0] == terms[4]:
+                    self.pushFunction()
                     self.lineNum = lineNum
                     return
 
@@ -173,3 +191,11 @@ class CodeParser():
 
     def wait(self, terms):
         #VM waits cycles based off of term[1]
+
+    def pushFunction(self):
+        self.functionLine.append(self.lineNum)
+
+    def popFunction(self):
+        if(!self.functionLine.empty()):
+            self.lineNum = self.functionLine.top()
+            self.functionLine.pop()
