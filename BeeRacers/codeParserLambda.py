@@ -1,5 +1,10 @@
+from Bee_Memory import VM
+import pickle
+
 class CodeParser():
 
+    bee = VM()
+        
     def __init__(self, path):
 
         #Set line number to zero and initialize stack
@@ -11,26 +16,59 @@ class CodeParser():
         self.userCode = beeCode.readlines()
         beeCode.close()
 
-    def parser(self):
+        #Remove whitespace
+        line = 0
+        while line < len(self.userCode):
+            terms = self.userCode[line].split()
+            if len(terms) == 0:
+                self.userCode.pop(line)
+            else:
+                line += 1
+        
+        #Save bee code as binary
+        #binPath = path.replace(".txt", ".bin")
+        #pickle.dump(self.userCode, open(binPath, "wb")
+        #binPath.close()
+
+        #Create bee VM
+        self.bee.print_ram()
+                    
+    def parse(self):
 
         while self.lineNum < len(self.userCode):
 
             terms = self.userCode[self.lineNum].split()
+            print(terms)
 
             if terms[0] == "add":
-                self.add(terms)
+                if terms[1] == "SPEED":
+                    self.bee.add(0, int(terms[2]))
+                elif terms[1] == "ANGLE":
+                    self.bee.add(1, int(terms[2]))
 
             elif terms[0] == "sub":
-                self.sub(terms)
+                if terms[1] == "SPEED":
+                    self.bee.sub(0, int(terms[2]))
+                elif terms[1] == "ANGLE":
+                    self.bee.sub(1, int(terms[2]))
 
-            elif terms[0] == "mlt":
-                self.mlt(terms)
+            elif terms[0] == "mpy":
+                if terms[1] == "SPEED":
+                    self.bee.mpy(0, int(terms[2]))
+                elif terms[1] == "ANGLE":
+                    self.bee.mpy(1, int(terms[2]))
 
             elif terms[0] == "div":
-                self.div(terms)
+                if terms[1] == "SPEED":
+                    self.bee.div(0, int(terms[2]))
+                elif terms[1] == "ANGLE":
+                    self.bee.div(1, int(terms[2]))
 
             elif terms[0] == "set":
-                self.set(terms)
+                if terms[1] == "SPEED":
+                    self.bee.mov(0, int(terms[2]))
+                elif terms[1] == "ANGLE":
+                    self.bee.mov(1, int(terms[2]))
 
             elif terms[0] == "jmp":
                 self.jmp(terms)
@@ -67,52 +105,17 @@ class CodeParser():
                 
             self.lineNum += 1
 
-    def add(self, terms):
-        
-        if terms[1] == "SPEED":
-            #ADD NUMBER TO SPEED OF BEE
-        elif terms[1] == "ANGLE":
-            #ADD NUMBER TO ANGLE OF BEE
-
-    def sub(self, terms):
-
-        if terms[1] == "SPEED":
-            #SUBTRACT NUMBER FROM SPEED OF BEE
-        elif terms[1] == "ANGLE":
-            #SUBTRACT NUMBER FROM ANGLE OF BEE
-
-    def mlt(self, terms):
-
-        if terms[1] == "SPEED":
-            #MULTIPLY SPEED BY NUMBER
-
-        elif terms[1] == "ANGLE":
-            #MULTIPLY ANGLE BY NUMBER
-
-    def div(self, terms):
-
-        if terms[1] == "SPEED":
-            #DIVIDE SPEED BY NUMBER
-        elif terms[1] == "ANGLE":
-            #DIVIDE ANGLE BY NUMBER
-
-    def set(self, terms):
-
-        if terms[1] == "SPEED":
-            #SET SPEED TO NUMBER
-        elif terms[1] == "ANGLE":
-            #SET ANGLE TO NUMBER
-
     def jmp(self, terms):
 
         for lineNum, line in enumerate(self.userCode):
             line = self.userCode[lineNum].split()
+            print("Linenum: ", lineNum, "Terms: ", terms)
             if line[0] == terms[1]:
                 self.pushFunction()
                 self.lineNum = lineNum
                 return
             
-    def fly(self):
+    #def fly(self):
 
         #REMOVE COLLISION FROM BEE FOR SET TIME PERIOD
         #INCREASE SIZE OF BEE SPRITE AND DEPTH OF SHADOW THEN GO BACK TO NORMAL
@@ -184,16 +187,17 @@ class CodeParser():
                     return
 
     def error(self, terms):
-        for i, _ in terms:
+        for i in (1, len(terms)):
             print(terms[i])
+        #vm.error()
 
     def wait(self, terms):
-        #VM waits cycles based off of term[1]
+        vm.wait(terms[1])
 
     def pushFunction(self):
         self.functionLine.append(self.lineNum)
 
     def popFunction(self):
-        if(!self.functionLine.empty()):
-            self.lineNum = self.functionLine.top()
+        if(not(self.functionLine)):
+            self.lineNum = self.functionLine[(len(self.functionLine) - 1)]
             self.functionLine.pop()

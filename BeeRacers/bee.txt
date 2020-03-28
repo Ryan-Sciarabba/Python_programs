@@ -1,0 +1,10 @@
+main
+add SPEED 20
+set ANGLE 30
+jmp fall
+add SPEED 5
+end
+
+fall
+sub SPEED 10
+end
