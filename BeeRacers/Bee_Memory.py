@@ -12,8 +12,10 @@ class VM:
     #Functions for instructions
 
     #NOP - Waste a clock cycle
-    def nop():
-        pass
+    def nop(bee, cycles):
+        while(cycles > 0):
+            pass
+            cycles -= 1
 
     #ADD - Add X+Y, result stored in X    
     def add(bee, mem_loc, y):
@@ -24,46 +26,57 @@ class VM:
 
     def sub(bee, mem_loc, y):
         bee.ram[mem_loc] = (bee.ram[mem_loc] - y)
+        bee.print_ram()
 
     #INC - Increments by 1
     def inc(bee, mem_loc):
         bee.ram[mem_loc] = bee.ram[mem_loc] + 1
+        bee.print_ram()
 
     #DEC - Decrement by 1 
     def dec(bee, mem_loc):
         bee.ram[mem_loc] = bee.ram[mem_loc] - 1
+        bee.print_ram()
 
     #NEG - Negate 
     def neg(bee, mem_loc):
         bee.ram[mem_loc] = bee.ram[mem_loc] * -1
+        bee.print_ram()
 
     #OR - Bitwise OR
     def orr(bee, mem_loc, y):
         bee.ram[mem_loc] = bee.ram[mem_loc] | y
+        bee.print_ram()
 
     #AND - Bitwise AND
     def andd(bee, mem_loc, y):
-        bee.ram[mem_loc] = bee.ram[mem_loc] & y  
+        bee.ram[mem_loc] = bee.ram[mem_loc] & y
+        bee.print_ram()
 
     #XOR - Bitwise XOR
     def xorr(bee, mem_loc, y):
         bee.ram[mem_loc] = bee.ram[mem_loc] ^ y
+        bee.print_ram()
 
     #NOT - Bitwise NOT
     def nott(bee, mem_loc):
         bee.ram[mem_loc] = ~ bee.ram[mem_loc]
+        bee.print_ram()
 
     #MPY - Multiply X*Y, result stored in X
     def mpy(bee, mem_loc, y):
-        bee.ram[mem_loc] = bee.ram[mem_loc] * y       
+        bee.ram[mem_loc] = bee.ram[mem_loc] * y
+        bee.print_ram()
 
     #DIV - Divide X/Y, result stored in X
     def div(bee, mem_loc, y):
-        bee.ram[mem_loc] = bee.ram[mem_loc] / y    
+        bee.ram[mem_loc] = bee.ram[mem_loc] / y
+        bee.print_ram()
 
     #MOD - Modulus X%Y, result stored in X
     def mod(bee, mem_loc, y):
         bee.ram[mem_loc] = bee.ram[mem_loc] % y
+        bee.print_ram()
     
     #CMP - Compare X to Y, result stored in flags register
     #1 = Zero
@@ -81,19 +94,7 @@ class VM:
         elif bee.ram[mem_loc] > y:
             x = 4
 
-        ram[mem_loc] = x        
-
-    #All the jump functions, establishing a place for them, but need to figure out how to actually code these in
-    #def bee_jmp():
-    #def bee_jls():    
-    #def bee_jgr():
-    #def bee_jne():
-    #def bee_jeq():
-    #def bee_jge():
-    #def bee_jle():
-    #def bee_jz():    
-    #def bee_jnz():    
-         
+        ram[mem_loc] = x    
 
     #MOV - Moves value into memory
 
@@ -111,11 +112,5 @@ class VM:
         bee.ram[mem_loc] = y
 
     #OPO - Output number from memory loc into port
-    def opo(bee, mem_loc, y):
-        #need code for inputing port values, ask nathan 
-        y = bee.ram[mem_loc]
-
-
-    #ERR - Generate error code
-    def err():
-        print("error")
+    def opo(bee, mem_loc):
+        return bee.ram[mem_loc]

@@ -1,10 +1,118 @@
 from Bee_Memory import VM
 import pickle
+import MemoryMap
 
 class CodeParser():
 
+    def jmp(self, terms):
+
+        for lineNum, line in enumerate(self.userCode):
+            line = self.userCode[lineNum].split()
+            if line[0] == terms[1]:
+                self.pushFunction()
+                self.lineNum = lineNum
+                return
+            
+    def fly(self):
+        return
+        #REMOVE COLLISION FROM BEE FOR SET TIME PERIOD
+        #INCREASE SIZE OF BEE SPRITE AND DEPTH OF SHADOW THEN GO BACK TO NORMAL
+
+    def portToNum(self, terms):
+        for i, _ in enumerate(terms):
+            if terms[i] == "SPEED":
+                terms[i] = self.bee.opo(MemoryMap.Speed)
+            if terms[i] == "ANGLE":
+                terms[i] = self.bee.opo(MemoryMap.Angle)
+
+    def lst(self, terms):
+        self.portToNum(terms)
+        if int(terms[1]) < int(terms[2]):
+            for lineNum, line in enumerate(self.userCode):
+                line in self.userCode[lineNum].split()
+                line = line[:-1]
+                if line == terms[4]:
+                    self.pushFunction()
+                    self.lineNum = lineNum
+                    return
+
+    def lte(self, terms):
+        self.portToNum(terms)
+        if int(terms[1]) <= int(terms[2]):
+            for lineNum, line in enumerate(self.userCode):
+                line in self.userCode[lineNum].split()
+                line = line[:-1]
+                if line == terms[4]:
+                    self.pushFunction()
+                    self.lineNum = lineNum
+                    return
+                
+    def grt(self, terms):
+        self.portToNum(terms)
+        if int(terms[1]) > int(terms[2]):
+            for lineNum, line in enumerate(self.userCode):
+                line in self.userCode[lineNum].split()
+                line = line[:-1]
+                if line == terms[4]:
+                    self.pushFunction()
+                    self.lineNum = lineNum
+                    return
+                
+    def gte(self, terms):
+        self.portToNum(terms)
+        if int(terms[1]) >= int(terms[2]):
+            for lineNum, line in enumerate(self.userCode):
+                line in self.userCode[lineNum].split()
+                line = line[:-1]
+                if line == terms[4]:
+                    self.pushFunction()
+                    self.lineNum = lineNum
+                    return
+                
+    def eqt(self, terms):
+        self.portToNum(terms)
+        if int(terms[1]) == int(terms[2]):
+            for lineNum, line in enumerate(self.userCode):
+                line in self.userCode[lineNum].split()
+                line = line[:-1]
+                if line == terms[4]:
+                    self.lineNum = lineNum
+                    return
+                
+    def nte(self, terms):
+        self.portToNum(terms)
+        if int(terms[1]) != int(terms[2]):
+            for lineNum, line in enumerate(self.userCode):
+                line in self.userCode[lineNum].split()
+                line = line[:-1]
+                if line == terms[4]:
+                    self.pushFunction()
+                    self.lineNum = lineNum
+                    return
+
+    def err(self, terms):
+        temp = ""
+        for i in range(1, int(len(terms))): 
+            temp += terms[i]
+            temp += " "
+        print("ERROR: " + temp)
+
+    def wait(self, cycles):
+        self.bee.nop(int(cycles))
+
+    def pushFunction(self):
+        self.functionLine.append(self.lineNum)
+
+    def popFunction(self):
+        if(len(self.functionLine) > 0):
+            self.lineNum = self.functionLine[(len(self.functionLine)) - 1]
+            self.functionLine.pop()
+            
+        elif(len(self.functionLine) == 0):
+            self.lineNum = len(self.userCode) + 1
+    
     bee = VM()
-        
+                                      
     def __init__(self, path):
 
         #Set line number to zero and initialize stack
@@ -26,178 +134,83 @@ class CodeParser():
                 line += 1
         
         #Save bee code as binary
-        #binPath = path.replace(".txt", ".bin")
-        #pickle.dump(self.userCode, open(binPath, "wb")
-        #binPath.close()
+        binPath = path.replace(".txt", ".bin")
+        binFile = open(binPath, "wb")
+        pickle.dump(self.userCode, binFile)
+        binFile.close()
 
         #Create bee VM
         self.bee.print_ram()
-                    
+        
     def parse(self):
 
+        #Function dictionary
+        math = {"add" : self.bee.add,  #Working
+                "sub" : self.bee.sub,  #Working
+                "mpy" : self.bee.mpy,  #Working
+                "div" : self.bee.div,  #Working
+                "set" : self.bee.mov,  #Working
+                "mod" : self.bee.mod,  #Working
+                "inc" : self.bee.inc,  #Working
+                "dec" : self.bee.dec,  #Working
+                "neg" : self.bee.neg,  #Working
+                "or" : self.bee.orr,   #Working
+                "and" : self.bee.andd, #Working
+                "xor" : self.bee.xorr, #Working
+                "not" : self.bee.nott  #Working
+        }
+
+        comparisons = { "jmp" : self.jmp, #Working
+                        "fly" : self.fly, #Not working
+                        "lst" : self.lst, #Working
+                        "lte" : self.lte, #Working
+                        "grt" : self.grt, #Working
+                        "gte" : self.gte, #Working
+                        "eqt" : self.eqt, #Working
+                        "nte" : self.nte, #Working
+                        "nop" : self.wait #Working
+        }
+        
         while self.lineNum < len(self.userCode):
 
+            #Split line up into parts
             terms = self.userCode[self.lineNum].split()
-            print(terms)
-
-            if terms[0] == "add":
-                if terms[1] == "SPEED":
-                    self.bee.add(0, int(terms[2]))
-                elif terms[1] == "ANGLE":
-                    self.bee.add(1, int(terms[2]))
-
-            elif terms[0] == "sub":
-                if terms[1] == "SPEED":
-                    self.bee.sub(0, int(terms[2]))
-                elif terms[1] == "ANGLE":
-                    self.bee.sub(1, int(terms[2]))
-
-            elif terms[0] == "mpy":
-                if terms[1] == "SPEED":
-                    self.bee.mpy(0, int(terms[2]))
-                elif terms[1] == "ANGLE":
-                    self.bee.mpy(1, int(terms[2]))
-
-            elif terms[0] == "div":
-                if terms[1] == "SPEED":
-                    self.bee.div(0, int(terms[2]))
-                elif terms[1] == "ANGLE":
-                    self.bee.div(1, int(terms[2]))
-
-            elif terms[0] == "set":
-                if terms[1] == "SPEED":
-                    self.bee.mov(0, int(terms[2]))
-                elif terms[1] == "ANGLE":
-                    self.bee.mov(1, int(terms[2]))
-
-            elif terms[0] == "jmp":
-                self.jmp(terms)
-
-            elif terms[0] == "fly":
-                self.fly()
-
-            elif terms[0] == "lst":
-                self.lst(terms)
-
-            elif terms[0] == "lte":
-                self.lte(terms)
-
-            elif terms[0] == "grt":
-                self.grt(terms)
-
-            elif terms[0] == "gte":
-                self.gte(terms)
-
-            elif terms[0] == "eqt":
-                self.eqt(terms)
-
-            elif terms[0] == "nte":
-                self.nte(terms)
+            ##print(self.lineNum, terms)           
+                
+            #Find function
+            if terms[0] == "end":
+                self.popFunction()
 
             elif terms[0] == "err":
-                self.error(terms)
+                self.err(terms)
 
             elif terms[0] == "nop":
-                self.wait(terms)
+                self.wait(terms[1])
                 
-            elif terms[0] == "end":
-                self.popFunction()
+            elif len(terms) == 3:
                 
+                #Set memory location to what variable needs to be changed
+                if terms[1] == "SPEED":
+                    self.memloc = MemoryMap.Speed
+                elif terms[1] == "ANGLE":
+                    self.memloc = MemoryMap.Angle
+                    
+                math[terms[0]](self.memloc, int(terms[2]))
+
+            elif len(terms) == 5 or len(terms) == 2:
+                
+                #Set memory location to what variable needs to be changed
+                if terms[1] == "SPEED":
+                    self.memloc = MemoryMap.Speed
+                elif terms[1] == "ANGLE":
+                    self.memloc = MemoryMap.Angle
+                    
+                if math.get(terms[0]):    
+                    math[terms[0]](self.memloc)
+                else:
+                    comparisons[terms[0]](terms)
+
+            #Increment line number
             self.lineNum += 1
 
-    def jmp(self, terms):
-
-        for lineNum, line in enumerate(self.userCode):
-            line = self.userCode[lineNum].split()
-            print("Linenum: ", lineNum, "Terms: ", terms)
-            if line[0] == terms[1]:
-                self.pushFunction()
-                self.lineNum = lineNum
-                return
-            
-    #def fly(self):
-
-        #REMOVE COLLISION FROM BEE FOR SET TIME PERIOD
-        #INCREASE SIZE OF BEE SPRITE AND DEPTH OF SHADOW THEN GO BACK TO NORMAL
-
-    def portToNum(self, terms):
-        for i, _ in enumerate(terms):
-            if terms[i] == "SPEED":
-                terms[i] = self.acceleration[0]
-            if terms[i] == "ANGLE":
-                terms[i] = self.acceleration[1]
-
-    def lst(self, terms):
-        self.portToNum(terms)
-        if int(terms[1]) < int(terms[2]):
-            for lineNum, line in enumerate(self.userCode):
-                line in self.userCode[lineNum].split()
-                if line[0] == terms[4]:
-                    self.pushFunction()
-                    self.lineNum = lineNum
-                    return
-
-    def lte(self, terms):
-        self.portToNum(terms)
-        if int(terms[1]) <= int(terms[2]):
-            for lineNum, line in enumerate(self.userCode):
-                line in self.userCode[lineNum].split()
-                if line[0] == terms[4]:
-                    self.pushFunction()
-                    self.lineNum = lineNum
-                    return
-                
-    def grt(self, terms):
-        self.portToNum(terms)
-        if int(terms[1]) > int(terms[2]):
-            for lineNum, line in enumerate(self.userCode):
-                line in self.userCode[lineNum].split()
-                if line[0] == terms[4]:
-                    self.pushFunction()
-                    self.lineNum = lineNum
-                    return
-                
-    def gte(self, terms):
-        self.portToNum(terms)
-        if int(terms[1]) >= int(terms[2]):
-            for lineNum, line in enumerate(self.userCode):
-                line in self.userCode[lineNum].split()
-                if line[0] == terms[4]:
-                    self.pushFunction()
-                    self.lineNum = lineNum
-                    return
-                
-    def eqt(self, terms):
-        self.portToNum(terms)
-        if int(terms[1]) == int(terms[2]):
-            for lineNum, line in enumerate(self.userCode):
-                line in self.userCode[lineNum].split()
-                if line[0] == terms[4]:
-                    self.lineNum = lineNum
-                    return
-                
-    def nte(self, terms):
-        self.portToNum(terms)
-        if int(terms[1]) != int(terms[2]):
-            for lineNum, line in enumerate(self.userCode):
-                line in self.userCode[lineNum].split()
-                if line[0] == terms[4]:
-                    self.pushFunction()
-                    self.lineNum = lineNum
-                    return
-
-    def error(self, terms):
-        for i in (1, len(terms)):
-            print(terms[i])
-        #vm.error()
-
-    def wait(self, terms):
-        vm.wait(terms[1])
-
-    def pushFunction(self):
-        self.functionLine.append(self.lineNum)
-
-    def popFunction(self):
-        if(not(self.functionLine)):
-            self.lineNum = self.functionLine[(len(self.functionLine) - 1)]
-            self.functionLine.pop()
+        
