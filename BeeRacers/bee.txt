@@ -1,3 +1,9 @@
-set SPEED 20
-set ANGLE 30
-not SPEED
+set ax 10
+set bx 9
+
+lst bx ax paul 6
+end
+
+6
+err Wow
+end

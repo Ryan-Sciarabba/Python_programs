@@ -1,3 +1,5 @@
+import sys
+
 class VM:
 
     ram = [0] * 65536
@@ -12,7 +14,7 @@ class VM:
     #Functions for instructions
 
     #NOP - Waste a clock cycle
-    def nop(bee, cycles):
+    def nop(bee, cycles):  
         while(cycles > 0):
             pass
             cycles -= 1
